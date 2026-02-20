@@ -1,0 +1,52 @@
+#!/usr/bin/env node
+
+'use strict'
+
+var args = process.argv.slice(2)
+
+function print(msg) {
+  process.stdout.write(msg + '\n')
+}
+
+if (args.includes('--help') || args.includes('-h') || args.length === 0) {
+  print('')
+  print('  no-coauthor — strip AI co-author lines from git commits')
+  print('')
+  print('  Usage')
+  print('    $ npx no-coauthor <command> [options]')
+  print('')
+  print('  Commands')
+  print('    install             Install hook in current repo')
+  print('    install --global    Install as global git hook')
+  print('    uninstall           Remove hook from current repo')
+  print('    uninstall --global  Remove global git hook')
+  print('')
+  print('  Options')
+  print('    -h, --help          Show this help')
+  print('    -v, --version       Show version')
+  print('')
+  print('  Strips Co-Authored-By lines for:')
+  print('    Claude, Copilot, GPT, ChatGPT, OpenAI, Gemini,')
+  print('    Bard, Cursor, Codeium, Anthropic, Windsurf,')
+  print('    Tabnine, Amazon Q, CodeWhisperer')
+  print('')
+  process.exit(0)
+}
+
+if (args.includes('--version') || args.includes('-v')) {
+  var pkg = require('../package.json')
+  print('no-coauthor ' + pkg.version)
+  process.exit(0)
+}
+
+var command = args[0]
+var isGlobal = args.includes('--global')
+
+if (command === 'install') {
+  require('../lib/install.js')(isGlobal)
+} else if (command === 'uninstall') {
+  require('../lib/uninstall.js')(isGlobal)
+} else {
+  process.stderr.write('no-coauthor: unknown command "' + command + '". Run --help for usage.\n')
+  process.exit(1)
+}

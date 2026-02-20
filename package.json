@@ -1,0 +1,34 @@
+{
+  "name": "no-coauthor",
+  "version": "1.0.0",
+  "description": "Git hook that strips AI co-author lines (Claude, Copilot, GPT, Gemini, etc.) from commit messages",
+  "license": "MIT",
+  "author": "0xdsgnrd",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/0xdsgnrd/no-coauthor.git"
+  },
+  "bin": {
+    "no-coauthor": "./bin/no-coauthor.js"
+  },
+  "files": [
+    "bin/",
+    "lib/",
+    "install.sh"
+  ],
+  "engines": {
+    "node": ">=14"
+  },
+  "keywords": [
+    "git",
+    "hooks",
+    "commit",
+    "co-author",
+    "ai",
+    "claude",
+    "copilot",
+    "gpt",
+    "gemini",
+    "cursor"
+  ]
+}

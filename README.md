@@ -1,8 +1,39 @@
 # no-coAuthor
 
-Git hook that automatically strips AI co-Author lines from your commit messages.
+Git hook that automatically strips AI co-author lines from your commit messages.
 
 Stop Claude, Copilot, GPT, and other AI tools from showing up as contributors on your GitHub commits.
+
+## Why this exists
+
+Some AI coding tools add `Co-Authored-By` lines to your commits automatically. A few offer settings to disable it, but those settings are unreliable:
+
+| Tool | Adds Co-Authored-By? | Built-in disable? | Reliable? |
+|------|---------------------|-------------------|-----------|
+| **Claude Code** | Yes | `attribution` in settings.json | No -- 10+ open bugs, setting ignored intermittently |
+| **Cursor** | Yes | Settings > Agent > Attribution | No -- IDE updates silently re-enable it |
+| **Copilot Agent** | Yes (agent becomes commit author) | No setting exists | N/A |
+| **Gemini Code Assist** | Yes on PR suggestions | No granular setting | N/A |
+
+`no-coauthor` is a git-level safety net. It runs inside git itself, not inside the AI tool, so it catches everything regardless of which tool added it or whether settings are configured correctly.
+
+**Use both together:** Configure your AI tool's built-in setting (prevention) AND install `no-coauthor` (enforcement). Belt and suspenders.
+
+### Configure built-in settings (complementary)
+
+**Claude Code** -- Add to `~/.claude/settings.json`:
+```json
+{
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  }
+}
+```
+
+**Cursor** -- Go to Settings > Agent > Attribution and disable it. Re-check after updates.
+
+**Copilot Agent / Gemini Code Assist** -- No built-in setting. `no-coauthor` is your only option.
 
 ## Install
 
@@ -14,6 +45,13 @@ npx no-coauthor install
 
 # Global (all repos on your machine)
 npx no-coauthor install --global
+```
+
+### Bun
+
+```bash
+bunx no-coauthor install
+bunx no-coauthor install --global
 ```
 
 ### curl (auto-detects Node.js, falls back to POSIX shell)
@@ -34,19 +72,20 @@ cd no-coauthor
 bash install.sh
 ```
 
-## What it does
+## What it catches
 
-Installs a `commit-msg` git hook that runs before each commit is finalized. It removes any `Co-Authored-By` line that mentions an AI tool:
+Strips `Co-Authored-By` lines mentioning any of these AI tools:
 
 - Claude, Anthropic
 - Copilot, GitHub Copilot
 - GPT, ChatGPT, OpenAI
 - Gemini, Bard
 - Cursor
-- Codeium
-- Windsurf
+- Codeium, Windsurf
 - Tabnine
 - Amazon Q, CodeWhisperer
+
+Human co-authors are always kept.
 
 ### Before
 
@@ -54,12 +93,15 @@ Installs a `commit-msg` git hook that runs before each commit is finalized. It r
 feat: add user authentication
 
 Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+Co-Authored-By: Jane Doe <jane@example.com>
 ```
 
 ### After
 
 ```
 feat: add user authentication
+
+Co-Authored-By: Jane Doe <jane@example.com>
 ```
 
 ## Uninstall
@@ -74,15 +116,13 @@ npx no-coauthor uninstall --global
 
 ## No Node.js? No problem
 
-By default, the hook uses Node.js for better regex support. If Node.js isn't available, it automatically falls back to a POSIX shell hook that works on any system with `/bin/sh` and `grep`.
-
-You can also force the shell version:
+By default, the hook uses Node.js for better regex support. If Node.js isn't available, it automatically falls back to a POSIX shell hook that works on any system with `/bin/sh` and `grep`. Zero dependencies.
 
 ```bash
-# npm
+# Force the shell version
 npx no-coauthor install --no-node
 
-# curl
+# Or via curl
 curl -fsSL https://raw.githubusercontent.com/0xdsgnrd/no-coauthor/main/install.sh | sh -s -- --no-node
 ```
 

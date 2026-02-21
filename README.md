@@ -1,6 +1,6 @@
 # no-coauthor
 
-Git hook that automatically strips AI co-author lines from your commit messages.
+Git hook that automatically strips AI co-Author lines from your commit messages.
 
 Stop Claude, Copilot, GPT, and other AI tools from showing up as contributors on your GitHub commits.
 

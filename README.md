@@ -1,4 +1,4 @@
-# no-coauthor
+# no-coAuthor
 
 Git hook that automatically strips AI co-Author lines from your commit messages.
 

@@ -18,10 +18,12 @@ if (args.includes('--help') || args.includes('-h') || args.length === 0) {
   print('  Commands')
   print('    install             Install hook in current repo')
   print('    install --global    Install as global git hook')
+  print('    install --no-node   Install POSIX shell hook (no Node.js needed)')
   print('    uninstall           Remove hook from current repo')
   print('    uninstall --global  Remove global git hook')
   print('')
   print('  Options')
+  print('    --no-node           Use POSIX shell hook instead of Node.js')
   print('    -h, --help          Show this help')
   print('    -v, --version       Show version')
   print('')
@@ -41,9 +43,10 @@ if (args.includes('--version') || args.includes('-v')) {
 
 var command = args[0]
 var isGlobal = args.includes('--global')
+var noNode = args.includes('--no-node')
 
 if (command === 'install') {
-  require('../lib/install.js')(isGlobal)
+  require('../lib/install.js')(isGlobal, noNode)
 } else if (command === 'uninstall') {
   require('../lib/uninstall.js')(isGlobal)
 } else {

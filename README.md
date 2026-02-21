@@ -16,14 +16,14 @@ npx no-coauthor install
 npx no-coauthor install --global
 ```
 
-### curl (no Node.js package needed)
+### curl (auto-detects Node.js, falls back to POSIX shell)
 
 ```bash
 # Per-project (run inside a git repo)
-curl -fsSL https://raw.githubusercontent.com/0xdsgnrd/no-coauthor/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/0xdsgnrd/no-coauthor/main/install.sh | sh
 
 # Global
-curl -fsSL https://raw.githubusercontent.com/0xdsgnrd/no-coauthor/main/install.sh | bash -s -- --global
+curl -fsSL https://raw.githubusercontent.com/0xdsgnrd/no-coauthor/main/install.sh | sh -s -- --global
 ```
 
 ### Manual
@@ -72,9 +72,23 @@ npx no-coauthor uninstall
 npx no-coauthor uninstall --global
 ```
 
+## No Node.js? No problem
+
+By default, the hook uses Node.js for better regex support. If Node.js isn't available, it automatically falls back to a POSIX shell hook that works on any system with `/bin/sh` and `grep`.
+
+You can also force the shell version:
+
+```bash
+# npm
+npx no-coauthor install --no-node
+
+# curl
+curl -fsSL https://raw.githubusercontent.com/0xdsgnrd/no-coauthor/main/install.sh | sh -s -- --no-node
+```
+
 ## How it works
 
-The hook is a small Node.js script that:
+The hook runs before each commit is finalized:
 
 1. Reads the commit message file (passed by git as `$1`)
 2. Removes lines matching `Co-Authored-By: <AI tool name>`
